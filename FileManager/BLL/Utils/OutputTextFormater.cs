@@ -10,7 +10,7 @@ namespace BLL.Utils
             foreach (var d in data)
             {
                 var prefix = "    -";
-                outputText += $"-{d.Name}{(d.ShowFullInfo ? ":" : "")}\n";
+                outputText += $"-{d.Name}{(d.ShowFullInfo ? ":" : string.Empty)}\n";
 
                 if (!d.ShowFullInfo) continue;
 
@@ -19,6 +19,7 @@ namespace BLL.Utils
                     outputText += $"{prefix}{k}: {v}\n";
                 }
             }
+
             return outputText;
         }
     }

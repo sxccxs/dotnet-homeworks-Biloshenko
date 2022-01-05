@@ -1,6 +1,7 @@
 ﻿using BLL.Abstractions.Interfaces;
 using BLL.Commands;
 using Core.Collections;
+using Core.Dataclasses;
 using Core.Exceptions;
 
 namespace BLL.Services
@@ -44,25 +45,26 @@ namespace BLL.Services
             splited.Add(s);
             for (var i = 0; i < splited.Count; i++)
             {
-                splited[i] = string.Join("", splited[i].ToCharArray()
+                splited[i] = string.Join(string.Empty, splited[i].ToCharArray()
                                                        .Where(x => x != '"')
                                                        .ToArray());
             }
+
             return splited.ToArray();
         }
-        public string? Parse(string? input)
+
+        public OptionalResult<string> Parse(string? input)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return null;
+                return new OptionalResult<string>();
             }
             var inp = SplitString(input, ' ');
             var cmd = inp.First();
             var mArgs = inp.Skip(1).ToArray();
             if (_commandsDict.Contains(cmd))
             {
-                var res = _commandsDict[cmd].Execute(mArgs);
-                return string.IsNullOrEmpty(res) ? null : res;
+                return _commandsDict[cmd].Execute(mArgs);
             }
             else
             {

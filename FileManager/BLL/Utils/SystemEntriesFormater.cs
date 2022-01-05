@@ -11,6 +11,7 @@ namespace BLL.Utils
         {
             var file = GetSystemEntryDataForFiles();
             var directories = GetSystemEntryDataForDirectories();
+
             return file.Concat(directories).ToArray();
         }
 
@@ -28,8 +29,10 @@ namespace BLL.Utils
             SystemEntryData[] directoriesData = directories
                 .Select(x => ConvertDirectoryInfoToSystemEntryData(x))
                 .ToArray();
+
             return directoriesData;
         }
+
         private SystemEntryData[] GetSystemEntryDataForFiles()
         {
             FileInfo[] files = Directory.GetFiles(Directory.GetCurrentDirectory())
@@ -38,24 +41,30 @@ namespace BLL.Utils
             SystemEntryData[] directoriesData = files
                 .Select(x => ConvertFileInfoToSystemEntryData(x))
                 .ToArray();
+
             return directoriesData;
         }
+
         private SystemEntryData ConvertFileInfoToSystemEntryData(FileInfo file)
         {
             var data = new SystemEntryData(file.Name,
                                             file.Attributes.HasFlag(FileAttributes.Hidden),
                                             SystemEntryType.File);
             AddFullInfoToSystemEntryDataFromFileInfo(data, file);
+
             return data;
         }
+
         private SystemEntryData ConvertDirectoryInfoToSystemEntryData(DirectoryInfo dir)
         {
             var data = new SystemEntryData(dir.Name,
                                             dir.Attributes.HasFlag(FileAttributes.Hidden),
                                             SystemEntryType.Directory);
             AddFullInfoToSystemEntryDataFromDirectoryInfo(data, dir);
+
             return data;
         }
+
         private void AddFullInfoToSystemEntryDataFromFileInfo(SystemEntryData data, FileInfo file)
         {
 
@@ -68,9 +77,9 @@ namespace BLL.Utils
                 data.AddField(k, v);
             }
         }
+
         private void AddFullInfoToSystemEntryDataFromDirectoryInfo(SystemEntryData data, DirectoryInfo dir)
         {
-
             data.AddField("Created at", dir.CreationTime.ToString());
         }
 
@@ -99,6 +108,7 @@ namespace BLL.Utils
                 order++;
                 len /= 1024;
             }
+
             return $"{len} {sizes[order]}";
         }
     }

@@ -23,7 +23,7 @@ namespace BLL.Commands
 
         public override string Name => "sh";
 
-        public override string? Execute(string[] args)
+        public override OptionalResult<string> Execute(string[] args)
         {
             new ArgumentsValidator().ValidateParameters(args, _flagArguments, Name);
             var sysFormater = new SystemEntriesFormater();
@@ -36,7 +36,7 @@ namespace BLL.Commands
                 data = arg.Apply(data);
             }
 
-            string outputText = "";
+            string outputText = string.Empty;
             var textFormater = new OutputTextFormater();
             var dirsData = sysFormater.FilterSystemEntryDataByFlag(data, SystemEntryType.Directory);
             var filesData = sysFormater.FilterSystemEntryDataByFlag(data, SystemEntryType.File);
@@ -44,7 +44,8 @@ namespace BLL.Commands
             outputText += textFormater.FormatSystemEntriesToTree(dirsData, "Directories");
             outputText += "\n";
             outputText += textFormater.FormatSystemEntriesToTree(filesData, "Files");
-            return outputText;
+
+            return new OptionalResult<string>(outputText);
         }
 
         private SystemEntryData[] ApplyHidden(FlagArgument<SystemEntryData[]> flag, SystemEntryData[] data)
@@ -53,6 +54,7 @@ namespace BLL.Commands
             {
                 data = data.Where(x => !x.IsHidden).ToArray();
             }
+
             return data;
         }
 
@@ -62,6 +64,7 @@ namespace BLL.Commands
             {
                 Array.ForEach(data, x => x.ShowFullInfo = true);
             }
+
             return data;
         }
         private SystemEntryData[] ApplySort(FlagArgument<SystemEntryData[]> flag, SystemEntryData[] data)
@@ -72,6 +75,7 @@ namespace BLL.Commands
                                        .Concat(SortFiles(data, flag.CurrentSubArgument))
                                        .ToArray();
             }
+
             return data;
         }
         private SystemEntryData[] SortFiles(SystemEntryData[] data, string key)
@@ -82,6 +86,7 @@ namespace BLL.Commands
                 return files.OrderBy(x => x.Name).ToArray();
 
             }
+
             return files.OrderBy(x => x.Fields[key]).ToArray();
 
         }
@@ -93,6 +98,7 @@ namespace BLL.Commands
                 return files.OrderBy(x => x.Name).ToArray();
 
             }
+
             return files.OrderBy(x => x.Fields[key]).ToArray();
 
         }

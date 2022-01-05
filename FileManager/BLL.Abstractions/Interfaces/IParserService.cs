@@ -1,7 +1,9 @@
-﻿namespace BLL.Abstractions.Interfaces
+﻿using Core.Dataclasses;
+
+namespace BLL.Abstractions.Interfaces
 {
     public interface IParserService
     {
-        string? Parse(string? input);
+        OptionalResult<string> Parse(string? input);
     }
 }

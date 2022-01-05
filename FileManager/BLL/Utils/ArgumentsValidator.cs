@@ -10,19 +10,21 @@ namespace BLL.Utils
             if (args is null || args?.Length < n)
             {
                 throw new InvalidArgumentException($"{cmdName} command needs {n} argument" +
-                                                   $"{(n.ToString().Last() == '1' ? "" : "s")}," +
+                                                   $"{(n.ToString().Last() == '1' ? string.Empty : "s")}," +
                                                    $" {args.Length} given.");
             }
             else if (args?.Length > n)
             {
 
                 throw new InvalidArgumentException($"{cmdName} command takes only {n} " +
-                                                   $"argument{(n.ToString().Last() == '1' ? "" : "s")}, " +
+                                                   $"argument{(n.ToString().Last() == '1' ? string.Empty : "s")}, " +
                                                    $"{args.Length} given.");
             }
+
             return args;
 
         }
+
         public void ValidateParameters<T>(string[] args, FlagArgument<T>[] cmdArgs, string cmdName)
         {
             bool skip = false;

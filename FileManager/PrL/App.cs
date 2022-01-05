@@ -30,10 +30,10 @@ namespace PrL
                 try
                 {
                     var res = _parserService.Parse(inp);
-                    if (res != null)
+                    if (res.HasValue)
                     {
                         Console.WriteLine();
-                        Console.WriteLine(res);
+                        Console.WriteLine(res.Value);
                     }
                 }
                 catch (Exception ex)

@@ -29,6 +29,7 @@ namespace Core.Collections
             {
                 throw new KeyNotFoundException($"Key {aKey} does not exist.");
             }
+
             return _values.Where(x => x.Key.Equals(aKey)).ToArray()[0].Value;
 
         }
@@ -58,8 +59,6 @@ namespace Core.Collections
                 Add(key, value);
             }
         }
-
-
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {

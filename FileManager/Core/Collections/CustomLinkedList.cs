@@ -7,8 +7,6 @@ namespace Core.Collections
         private Node<T>? root;
         public int Count => GetLength(root);
 
-
-
         public void Add(T value)
         {
             if (root is null)
@@ -31,6 +29,7 @@ namespace Core.Collections
             {
                 var v = root.Value;
                 root = null;
+
                 return v;
             }
             else
@@ -39,6 +38,7 @@ namespace Core.Collections
             }
 
         }
+
         public void Remove(int index)
         {
 
@@ -87,6 +87,7 @@ namespace Core.Collections
             }
 
         }
+
         private T RemoveLast(Node<T> node)
         {
             if (node is null || node.Next is null)
@@ -97,6 +98,7 @@ namespace Core.Collections
             {
                 var v = node.Next.Value;
                 node.Next = null;
+
                 return v;
             }
             return RemoveLast(node);
@@ -112,6 +114,7 @@ namespace Core.Collections
             }
             return FindLast(node.Next);
         }
+
         private int GetLength(Node<T>? node, int l = 0)
         {
             if (node is null)
@@ -139,6 +142,7 @@ namespace Core.Collections
         private class Node<TInner>
         {
             public TInner Value { get; set; }
+
             public Node<TInner>? Next { get; set; }
 
             public Node(TInner value, Node<TInner>? next = null)
