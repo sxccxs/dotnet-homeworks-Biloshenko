@@ -4,129 +4,75 @@ namespace Core.Collections
 {
     public class CustomLinkedList<T> : IEnumerable<T>
     {
-        private Node<T>? root;
-        public int Count => GetLength(root);
+        private Node<T> root;
+
+        public int Count => this.GetLength(this.root);
+
+        public T this[int index]
+        {
+            get => this.At(index);
+            set => this.Set(index, value);
+        }
 
         public void Add(T value)
         {
-            if (root is null)
+            if (this.root is null)
             {
-                root = new Node<T>(value);
+                this.root = new Node<T>(value);
             }
             else
             {
-                var node = FindLast(root);
+                var node = this.FindLast(this.root);
                 node.Next = new Node<T>(value);
             }
         }
+
         public T Pop()
         {
-            if (root is null)
+            if (this.root is null)
             {
                 throw new InvalidOperationException("Can't pop from empty list");
             }
-            else if (root.Next is null)
+            else if (this.root.Next is null)
             {
-                var v = root.Value;
-                root = null;
+                var v = this.root.Value;
+                this.root = null;
 
                 return v;
             }
             else
             {
-                return RemoveLast(root);
+                return this.RemoveLast(this.root);
             }
-
         }
 
         public void Remove(int index)
         {
-
-            if (index == 0 && root != null)
+            if (index == 0 && this.root != null)
             {
-                root = root.Next;
+                this.root = this.root.Next;
             }
             else
             {
-                var prev = GetNodeWithIndex(root, index - 1);
-                var next = GetNodeWithIndex(root, index + 1);
-                prev.Next = next;
+                var previous = this.GetNodeWithIndex(this.root, index - 1);
+                var next = this.GetNodeWithIndex(this.root, index + 1);
+                previous.Next = next;
             }
         }
 
         public T At(int index)
         {
-            return GetNodeWithIndex(root, index).Value;
+            return this.GetNodeWithIndex(this.root, index).Value;
         }
 
         public void Set(int index, T value)
         {
-            GetNodeWithIndex(root, index).Value = value;
-        }
-
-        public T this[int index]
-        {
-            get => At(index);
-            set => Set(index, value);
-        }
-
-        private Node<T> GetNodeWithIndex(Node<T>? node, int index, int i = 0)
-        {
-
-            if (node is null || index < 0)
-            {
-                throw new IndexOutOfRangeException($"Index {i} is out of bounds");
-            }
-            else if (index == i)
-            {
-                return node;
-            }
-            else
-            {
-                return GetNodeWithIndex(node.Next, index, i + 1);
-            }
-
-        }
-
-        private T RemoveLast(Node<T> node)
-        {
-            if (node is null || node.Next is null)
-            {
-                throw new ArgumentNullException(nameof(node));
-            }
-            if (node.Next.Next is null)
-            {
-                var v = node.Next.Value;
-                node.Next = null;
-
-                return v;
-            }
-            return RemoveLast(node);
-
-
-        }
-
-        private Node<T> FindLast(Node<T> node)
-        {
-            if (node.Next is null)
-            {
-                return node;
-            }
-            return FindLast(node.Next);
-        }
-
-        private int GetLength(Node<T>? node, int l = 0)
-        {
-            if (node is null)
-            {
-                return l;
-            }
-            return GetLength(node.Next, l + 1);
+            this.GetNodeWithIndex(this.root, index).Value = value;
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            var cur = root;
+            var cur = this.root;
             while (cur != null)
             {
                 yield return cur.Value;
@@ -136,21 +82,74 @@ namespace Core.Collections
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return this.GetEnumerator();
+        }
+
+        private Node<T> GetNodeWithIndex(Node<T> node, int index, int searchIndex = 0)
+        {
+            if (node is null || index < 0)
+            {
+                throw new IndexOutOfRangeException($"Index {searchIndex} is out of bounds");
+            }
+            else if (index == searchIndex)
+            {
+                return node;
+            }
+            else
+            {
+                return this.GetNodeWithIndex(node.Next, index, searchIndex + 1);
+            }
+        }
+
+        private T RemoveLast(Node<T> node)
+        {
+            if (node is null || node.Next is null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            if (node.Next.Next is null)
+            {
+                var v = node.Next.Value;
+                node.Next = null;
+
+                return v;
+            }
+
+            return this.RemoveLast(node);
+        }
+
+        private Node<T> FindLast(Node<T> node)
+        {
+            if (node.Next is null)
+            {
+                return node;
+            }
+
+            return this.FindLast(node.Next);
+        }
+
+        private int GetLength(Node<T> node, int length = 0)
+        {
+            if (node is null)
+            {
+                return length;
+            }
+
+            return this.GetLength(node.Next, length + 1);
         }
 
         private class Node<TInner>
         {
-            public TInner Value { get; set; }
-
-            public Node<TInner>? Next { get; set; }
-
-            public Node(TInner value, Node<TInner>? next = null)
+            public Node(TInner value, Node<TInner> next = null)
             {
-                Value = value;
-                Next = next;
+                this.Value = value;
+                this.Next = next;
             }
 
+            public TInner Value { get; set; }
+
+            public Node<TInner> Next { get; set; }
         }
     }
 }

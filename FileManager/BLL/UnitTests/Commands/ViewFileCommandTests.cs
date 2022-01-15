@@ -1,11 +1,7 @@
-﻿using BLL.Commands;
+﻿using System.Text;
+using BLL.Commands;
 using Core.Exceptions;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace BLL.UnitTests.Commands
@@ -16,7 +12,7 @@ namespace BLL.UnitTests.Commands
         public void Execute_ValidFilePath_FirstNSymbolsOfFile()
         {
             // Arrange
-            var cmd = new ViewFileCommand();
+            var command = new ViewFileCommand();
             string folderName = "ViewFileCommandTests",
                    fileName = "ViewFileCommandTests",
                    folderPath = Path.Combine("/", folderName),
@@ -25,7 +21,7 @@ namespace BLL.UnitTests.Commands
             var data = new byte[250];
             new Random().NextBytes(data);
             var resText = Encoding.UTF8.GetString(data)[..200];
-            string[] args = { filePath };
+            string[] arguments = { filePath };
             Directory.CreateDirectory(folderPath);
             using (var f = File.OpenWrite(filePath))
             {
@@ -33,7 +29,7 @@ namespace BLL.UnitTests.Commands
             }
 
             // Act
-            var res = cmd.Execute(args);
+            var res = command.Execute(arguments);
 
             // Assert
             res.Should().Be(resText);
@@ -41,32 +37,33 @@ namespace BLL.UnitTests.Commands
             // Clean
             Directory.Delete(folderPath, true);
         }
+
         [Fact]
         public void Execute_NoArguments_InvalidArgumentException()
         {
             // Arrange
-            var cmd = new ViewFileCommand();
-            string[] args = Array.Empty<string>();
+            var command = new ViewFileCommand();
+            string[] arguments = Array.Empty<string>();
 
             // Act
-            Action act = () => cmd.Execute(args);
+            Action act = () => command.Execute(arguments);
 
             // Assert
             act.Should().Throw<InvalidArgumentException>();
         }
+
         [Fact]
         public void Execute_MoreThenOneArguments_InvalidArgumentException()
         {
             // Arrange
-            var cmd = new ViewFileCommand();
-            string[] args = { "a", "b" };
+            var command = new ViewFileCommand();
+            string[] arguments = { "a", "b" };
 
             // Act
-            Action act = () => cmd.Execute(args);
+            Action act = () => command.Execute(arguments);
 
             // Assert
             act.Should().Throw<InvalidArgumentException>();
         }
-
     }
 }

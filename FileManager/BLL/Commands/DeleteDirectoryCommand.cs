@@ -1,6 +1,6 @@
 ﻿using BLL.Abstractions.Interfaces;
-using BLL.Utils;
-using Core.Dataclasses;
+using BLL.Utilities;
+using Core.DataClasses;
 
 namespace BLL.Commands
 {
@@ -8,9 +8,9 @@ namespace BLL.Commands
     {
         public override string Name => "dd";
 
-        public override OptionalResult<string> Execute(string[] args)
+        public override OptionalResult<string> Execute(string[] arguments)
         {
-            string path = new ArgumentsValidator().ValidateNArguments(args, 1, Name)[0];
+            string path = new ArgumentsValidator().ValidateNArguments(arguments, 1, this.Name)[0];
             Directory.Delete(path, true);
 
             return new OptionalResult<string>();

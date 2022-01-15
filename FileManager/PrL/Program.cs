@@ -12,11 +12,11 @@ namespace PrL
             var serviceProvider = services.BuildServiceProvider();
             serviceProvider.GetService<App>()?.RunApp();
         }
+
         private static void ConfigureServices(IServiceCollection services)
         {
-
             services.AddScoped<App>();
-            DependencyRegistrer.ConfigureServices(services);
+            DependencyRegistrar.ConfigureServices(services);
         }
     }
 }

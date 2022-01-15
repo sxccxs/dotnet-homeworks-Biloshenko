@@ -8,7 +8,13 @@ namespace Core.Exceptions
 {
     public class InvalidCommandException : Exception
     {
-        public InvalidCommandException() { }
-        public InvalidCommandException(string message) : base(message) { }
+        public InvalidCommandException()
+        {
+        }
+
+        public InvalidCommandException(string message)
+            : base(message)
+        {
+        }
     }
 }

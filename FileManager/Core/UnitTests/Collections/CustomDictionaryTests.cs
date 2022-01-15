@@ -1,11 +1,11 @@
-﻿using Xunit;
-using FluentAssertions;
-using Core.Collections;
+﻿using Core.Collections;
 using Core.Exceptions;
+using FluentAssertions;
+using Xunit;
 
 namespace Core.UnitTests.Collections
 {
-    public class CustomDictionatryTests
+    public class CustomDictionaryTests
     {
         [Fact]
         public void Add_IntKey_StringValue_AddKeyValuePairToDict()
@@ -31,10 +31,10 @@ namespace Core.UnitTests.Collections
 
             // Assert
             act.Should().Throw<ArgumentNullException>();
-
         }
+
         [Fact]
-        public void Add_StringKey_IntValue_DublicateKeyException()
+        public void Add_StringKey_IntValue_DuplicateKeyException()
         {
             // Arrange
             var dict = new CustomDictionary<string, int>();
@@ -44,9 +44,9 @@ namespace Core.UnitTests.Collections
             Action act = () => dict.Add("a", 2);
 
             // Assert
-            act.Should().Throw<DublicateKeyException>();
-
+            act.Should().Throw<DuplicateKeyException>();
         }
+
         [Fact]
         public void Get_ValidKey_ValueAtGivenKey()
         {
@@ -60,6 +60,7 @@ namespace Core.UnitTests.Collections
             // Assert
             key.Should().Be(2);
         }
+
         [Fact]
         public void Get_NotExistingKey_KeyNotFoundException()
         {
@@ -72,6 +73,7 @@ namespace Core.UnitTests.Collections
             // Assert
             act.Should().Throw<KeyNotFoundException>();
         }
+
         [Fact]
         public void Get_NullKey_KeyNotFoundException()
         {
@@ -84,6 +86,7 @@ namespace Core.UnitTests.Collections
             // Assert
             act.Should().Throw<KeyNotFoundException>();
         }
+
         [Fact]
         public void Contains_ExistingKey_True()
         {
@@ -97,6 +100,7 @@ namespace Core.UnitTests.Collections
             // Assert
             check.Should().BeTrue();
         }
+
         [Fact]
         public void Contains_NotExistingKey_False()
         {
@@ -110,6 +114,7 @@ namespace Core.UnitTests.Collections
             // Assert
             check.Should().BeFalse();
         }
+
         [Fact]
         public void Remove_NotExistingKey_KeyNotFoundException()
         {
@@ -123,6 +128,7 @@ namespace Core.UnitTests.Collections
             // Assert
             act.Should().Throw<KeyNotFoundException>();
         }
+
         [Fact]
         public void Remove_ExistingKey_RemoveKeyValuePairWithGivenKey()
         {

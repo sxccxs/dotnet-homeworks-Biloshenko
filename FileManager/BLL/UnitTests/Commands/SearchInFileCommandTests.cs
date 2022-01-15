@@ -1,7 +1,7 @@
-﻿using BLL.Commands;
+﻿using System.Text;
+using BLL.Commands;
 using Core.Exceptions;
 using FluentAssertions;
-using System.Text;
 using Xunit;
 
 namespace BLL.UnitTests.Commands
@@ -19,8 +19,8 @@ namespace BLL.UnitTests.Commands
                    filePath = Path.Combine(folderPath, fileName),
                    resultText = $"Found \"{queryString}\" in file {filePath} at line {1}:\n" +
                                 $"    {queryString}\n";
-            string[] args = { filePath, queryString };
-            var cmd = new SearchInFileCommand();
+            string[] arguments = { filePath, queryString };
+            var command = new SearchInFileCommand();
             Directory.CreateDirectory(folderPath);
             using (var f = File.OpenWrite(filePath))
             {
@@ -28,7 +28,7 @@ namespace BLL.UnitTests.Commands
             }
 
             // Act
-            var res = cmd.Execute(args);
+            var res = command.Execute(arguments);
 
             // Assert
             res.Should().Be(resultText);
@@ -36,45 +36,47 @@ namespace BLL.UnitTests.Commands
             // Clean
             Directory.Delete(folderPath, true);
         }
+
         [Fact]
         public void Execute_NoArguments_InvalidArgumentException()
         {
             // Arrange
-            var cmd = new SearchInFileCommand();
-            string[] args = Array.Empty<string>();
+            var command = new SearchInFileCommand();
+            string[] arguments = Array.Empty<string>();
 
             // Act
-            Action act = () => cmd.Execute(args);
+            Action act = () => command.Execute(arguments);
 
             // Assert
             act.Should().Throw<InvalidArgumentException>();
         }
+
         [Fact]
         public void Execute_OneArgument_InvalidArgumentException()
         {
             // Arrange
-            var cmd = new SearchInFileCommand();
-            string[] args = { "a" };
+            var command = new SearchInFileCommand();
+            string[] arguments = { "a" };
 
             // Act
-            Action act = () => cmd.Execute(args);
+            Action act = () => command.Execute(arguments);
 
             // Assert
             act.Should().Throw<InvalidArgumentException>();
         }
+
         [Fact]
         public void Execute_MoreThenTwoArguments_InvalidArgumentException()
         {
             // Arrange
-            var cmd = new SearchInFileCommand();
-            string[] args = { "a", "b", "c" };
+            var command = new SearchInFileCommand();
+            string[] arguments = { "a", "b", "c" };
 
             // Act
-            Action act = () => cmd.Execute(args);
+            Action act = () => command.Execute(arguments);
 
             // Assert
             act.Should().Throw<InvalidArgumentException>();
         }
-
     }
 }

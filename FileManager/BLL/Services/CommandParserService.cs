@@ -1,75 +1,80 @@
 ﻿using BLL.Abstractions.Interfaces;
 using BLL.Commands;
 using Core.Collections;
-using Core.Dataclasses;
+using Core.DataClasses;
 using Core.Exceptions;
 
 namespace BLL.Services
 {
     internal class CommandParserService : IParserService
     {
-        private readonly Command[] _commands =  { new DeleteDirectoryCommand(), new DeleteFileCommand(),
-                                                   new MakeDirectoryCommand(), new MakeFileCommand(),
-                                                   new RenameDirectoryCommand(), new RenameFileCommand(),
-                                                   new ViewFileCommand(), new SearchInFileCommand(),
-                                                   new MoveCommand(), new ShowCommand(),
-                                                 };
-        private readonly CustomDictionary<string, Command> _commandsDict;
+        private readonly Command[] commands =
+        {
+            new DeleteDirectoryCommand(), new DeleteFileCommand(),
+            new MakeDirectoryCommand(), new MakeFileCommand(),
+            new RenameDirectoryCommand(), new RenameFileCommand(),
+            new ViewFileCommand(), new SearchInFileCommand(),
+            new MoveCommand(), new ShowCommand(),
+        };
+
+        private readonly CustomDictionary<string, Command> commandsDict;
 
         public CommandParserService()
         {
-            _commandsDict = new CustomDictionary<string, Command>();
-            foreach (var command in _commands)
+            this.commandsDict = new CustomDictionary<string, Command>();
+            foreach (var command in this.commands)
             {
-                _commandsDict.Add(command.Name, command);
+                this.commandsDict.Add(command.Name, command);
             }
         }
-        private string[] SplitString(string s, char sep)
-        {
-            var skip = false;
-            var splited = new CustomLinkedList<string>();
-            for (int i = 0; i < s.Length; i++)
-            {
-                if (s[i] == '"')
-                {
-                    skip = !skip;
-                }
-                else if (!skip && s[i] == sep)
-                {
-                    splited.Add(s[0..i]);
-                    s = s[(i + 1)..];
-                    i = -1;
-                }
 
-            }
-            splited.Add(s);
-            for (var i = 0; i < splited.Count; i++)
-            {
-                splited[i] = string.Join(string.Empty, splited[i].ToCharArray()
-                                                       .Where(x => x != '"')
-                                                       .ToArray());
-            }
-
-            return splited.ToArray();
-        }
-
-        public OptionalResult<string> Parse(string? input)
+        public OptionalResult<string> Parse(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
                 return new OptionalResult<string>();
             }
-            var inp = SplitString(input, ' ');
-            var cmd = inp.First();
-            var mArgs = inp.Skip(1).ToArray();
-            if (_commandsDict.Contains(cmd))
+
+            var splittedInput = this.SplitString(input, ' ');
+            var command = splittedInput.First();
+            var arguments = splittedInput.Skip(1).ToArray();
+            if (this.commandsDict.Contains(command))
             {
-                return _commandsDict[cmd].Execute(mArgs);
+                return this.commandsDict[command].Execute(arguments);
             }
             else
             {
-                throw new InvalidCommandException($"Command {cmd} not found");
+                throw new InvalidCommandException($"Command {command} not found");
             }
+        }
+
+        private string[] SplitString(string stringToSplit, char sep)
+        {
+            var skip = false;
+            var splitted = new CustomLinkedList<string>();
+            for (int i = 0; i < stringToSplit.Length; i++)
+            {
+                if (stringToSplit[i] == '"')
+                {
+                    skip = !skip;
+                }
+                else if (!skip && stringToSplit[i] == sep)
+                {
+                    splitted.Add(stringToSplit[0..i]);
+                    stringToSplit = stringToSplit[(i + 1) ..];
+                    i = -1;
+                }
+            }
+
+            splitted.Add(stringToSplit);
+            for (var i = 0; i < splitted.Count; i++)
+            {
+                splitted[i] = string.Join(string.Empty, splitted[i].ToCharArray()
+                                                       .Where(x => x != '"')
+                                                       .ToArray());
+            }
+
+            return splitted.ToArray();
         }
     }
 }

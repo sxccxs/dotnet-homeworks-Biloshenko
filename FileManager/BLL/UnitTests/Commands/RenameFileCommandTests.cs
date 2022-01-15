@@ -17,13 +17,13 @@ namespace BLL.UnitTests.Commands
                    folderPath = Path.Combine("/", folderName),
                    filePath = Path.Combine(folderPath, fileName),
                    newFilePath = Path.Combine(folderPath, newFileName);
-            string[] args = { filePath, newFilePath };
-            var cmd = new RenameFileCommand();
+            string[] arguments = { filePath, newFilePath };
+            var command = new RenameFileCommand();
             Directory.CreateDirectory(folderPath);
             File.Create(filePath).Close();
 
             // Act
-            cmd.Execute(args);
+            command.Execute(arguments);
 
             // Assert
             File.Exists(filePath).Should().BeFalse();
@@ -32,41 +32,44 @@ namespace BLL.UnitTests.Commands
             // Clean
             Directory.Delete(folderPath, true);
         }
+
         [Fact]
         public void Execute_NoArguments_InvalidArgumentException()
         {
             // Arrange
-            var cmd = new RenameFileCommand();
-            string[] args = Array.Empty<string>();
+            var command = new RenameFileCommand();
+            string[] arguments = Array.Empty<string>();
 
             // Act
-            Action act = () => cmd.Execute(args);
+            Action act = () => command.Execute(arguments);
 
             // Assert
             act.Should().Throw<InvalidArgumentException>();
         }
+
         [Fact]
         public void Execute_OneArgument_InvalidArgumentException()
         {
             // Arrange
-            var cmd = new RenameDirectoryCommand();
-            string[] args = { "a" };
+            var command = new RenameDirectoryCommand();
+            string[] arguments = { "a" };
 
             // Act
-            Action act = () => cmd.Execute(args);
+            Action act = () => command.Execute(arguments);
 
             // Assert
             act.Should().Throw<InvalidArgumentException>();
         }
+
         [Fact]
         public void Execute_MoreThenTwoArguments_InvalidArgumentException()
         {
             // Arrange
-            var cmd = new RenameFileCommand();
-            string[] args = { "a", "b", "c" };
+            var command = new RenameFileCommand();
+            string[] arguments = { "a", "b", "c" };
 
             // Act
-            Action act = () => cmd.Execute(args);
+            Action act = () => command.Execute(arguments);
 
             // Assert
             act.Should().Throw<InvalidArgumentException>();

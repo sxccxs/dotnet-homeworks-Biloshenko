@@ -1,24 +1,24 @@
-﻿using Xunit;
-using FluentAssertions;
-using BLL.Commands;
+﻿using BLL.Commands;
 using Core.Exceptions;
+using FluentAssertions;
+using Xunit;
 
 namespace BLL.UnitTests.Commands
 {
     public class MoveCommandTests
     {
         [Fact]
-        public void Execute_ValidDirectoryPath_SetCurrentDirectoryToBeTheFivenOne()
+        public void Execute_ValidDirectoryPath_SetCurrentDirectoryToBeTheGivenOne()
         {
             // Arrange
             string folderName = "MoveCommandTests",
                    folderPath = Path.Combine("/", folderName);
-            string[] args = { folderPath };
-            var cmd = new MoveCommand();
+            string[] arguments = { folderPath };
+            var command = new MoveCommand();
             var folderInfo = Directory.CreateDirectory(folderPath);
 
             // Act
-            cmd.Execute(args);
+            command.Execute(arguments);
 
             // Assert
             folderInfo.FullName.Should().Be(Directory.GetCurrentDirectory());
@@ -27,28 +27,30 @@ namespace BLL.UnitTests.Commands
             Directory.SetCurrentDirectory("/");
             Directory.Delete(folderPath);
         }
+
         [Fact]
         public void Execute_NoArguments_InvalidArgumentException()
         {
             // Arrange
-            var cmd = new MoveCommand();
-            string[] args = Array.Empty<string>();
+            var command = new MoveCommand();
+            string[] arguments = Array.Empty<string>();
 
             // Act
-            Action act = () => cmd.Execute(args);
+            Action act = () => command.Execute(arguments);
 
             // Assert
             act.Should().Throw<InvalidArgumentException>();
         }
+
         [Fact]
         public void Execute_MoreThenOneArguments_InvalidArgumentException()
         {
             // Arrange
-            var cmd = new MoveCommand();
-            string[] args = { "a", "b" };
+            var command = new MoveCommand();
+            string[] arguments = { "a", "b" };
 
             // Act
-            Action act = () => cmd.Execute(args);
+            Action act = () => command.Execute(arguments);
 
             // Assert
             act.Should().Throw<InvalidArgumentException>();

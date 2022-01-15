@@ -1,10 +1,9 @@
-﻿using BLL.Utils;
-using Core.Dataclasses;
+﻿using BLL.Utilities;
 using Core.Exceptions;
 using FluentAssertions;
 using Xunit;
 
-namespace BLL.UnitTests.Utils
+namespace BLL.UnitTests.Utilities
 {
     public class ArgumentsValidatorTests
     {
@@ -14,30 +13,30 @@ namespace BLL.UnitTests.Utils
             // Arrange
             var argumentsValidator = new ArgumentsValidator();
             int n = 2;
-            string[] args = { "a", "b" };
-            string cmdName = "test";
+            string[] arguments = { "a", "b" };
+            string commandName = "test";
 
             // Act
-            var res = argumentsValidator.ValidateNArguments(args, n, cmdName);
+            var res = argumentsValidator.ValidateNArguments(arguments, n, commandName);
 
             // Assert
-            res.Should().Equal(args);
+            res.Should().Equal(arguments);
         }
+
         [Fact]
         public void ValidateNArguments_ArgumentsArrayOfNotNLength_N_CommandName_ArgumentsArray()
         {
             // Arrange
             var argumentsValidator = new ArgumentsValidator();
             int n = 2;
-            string[] args = { "a" };
-            string cmdName = "test";
+            string[] arguments = { "a" };
+            string commandName = "test";
 
             // Act
-            Action act = () => argumentsValidator.ValidateNArguments(args, n, cmdName);
+            Action act = () => argumentsValidator.ValidateNArguments(arguments, n, commandName);
 
             // Assert
             act.Should().Throw<InvalidArgumentException>();
         }
-
     }
 }

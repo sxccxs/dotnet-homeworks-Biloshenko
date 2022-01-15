@@ -1,16 +1,16 @@
-﻿using Core.Collections;
-using Core.Dataclasses;
+﻿using System.Drawing;
+using Core.Collections;
+using Core.DataClasses;
 using Core.Enumerates;
-using System.Drawing;
 
-namespace BLL.Utils
+namespace BLL.Utilities
 {
-    internal class SystemEntriesFormater
+    internal class SystemEntriesFormatter
     {
-        public SystemEntryData[] GetSystemEntryDataForAllEntriess()
+        public SystemEntryData[] GetSystemEntryDataForAllEntries()
         {
-            var file = GetSystemEntryDataForFiles();
-            var directories = GetSystemEntryDataForDirectories();
+            var file = this.GetSystemEntryDataForFiles();
+            var directories = this.GetSystemEntryDataForDirectories();
 
             return file.Concat(directories).ToArray();
         }
@@ -27,7 +27,7 @@ namespace BLL.Utils
                                                    .Select(x => new DirectoryInfo(x))
                                                    .ToArray();
             SystemEntryData[] directoriesData = directories
-                .Select(x => ConvertDirectoryInfoToSystemEntryData(x))
+                .Select(x => this.ConvertDirectoryInfoToSystemEntryData(x))
                 .ToArray();
 
             return directoriesData;
@@ -39,7 +39,7 @@ namespace BLL.Utils
                                .Select(x => new FileInfo(x))
                                .ToArray();
             SystemEntryData[] directoriesData = files
-                .Select(x => ConvertFileInfoToSystemEntryData(x))
+                .Select(x => this.ConvertFileInfoToSystemEntryData(x))
                 .ToArray();
 
             return directoriesData;
@@ -47,32 +47,34 @@ namespace BLL.Utils
 
         private SystemEntryData ConvertFileInfoToSystemEntryData(FileInfo file)
         {
-            var data = new SystemEntryData(file.Name,
-                                            file.Attributes.HasFlag(FileAttributes.Hidden),
-                                            SystemEntryType.File);
-            AddFullInfoToSystemEntryDataFromFileInfo(data, file);
+            var data = new SystemEntryData(
+                file.Name,
+                file.Attributes.HasFlag(FileAttributes.Hidden),
+                SystemEntryType.File);
+
+            this.AddFullInfoToSystemEntryDataFromFileInfo(data, file);
 
             return data;
         }
 
         private SystemEntryData ConvertDirectoryInfoToSystemEntryData(DirectoryInfo dir)
         {
-            var data = new SystemEntryData(dir.Name,
-                                            dir.Attributes.HasFlag(FileAttributes.Hidden),
-                                            SystemEntryType.Directory);
-            AddFullInfoToSystemEntryDataFromDirectoryInfo(data, dir);
+            var data = new SystemEntryData(
+                dir.Name,
+                dir.Attributes.HasFlag(FileAttributes.Hidden),
+                SystemEntryType.Directory);
+            this.AddFullInfoToSystemEntryDataFromDirectoryInfo(data, dir);
 
             return data;
         }
 
         private void AddFullInfoToSystemEntryDataFromFileInfo(SystemEntryData data, FileInfo file)
         {
-
-            data.AddField("size", FormatFileSize(file.Length));
+            data.AddField("size", this.FormatFileSize(file.Length));
             data.AddField("created", file.CreationTime.ToString());
             var fileExtension = file.Extension.Length != 0 ? file.Extension[1..] : file.Extension;
             data.AddField("type", fileExtension);
-            foreach (var (k, v) in GetExtraInfoForFileType(file))
+            foreach (var (k, v) in this.GetExtraInfoForFileType(file))
             {
                 data.AddField(k, v);
             }
@@ -85,20 +87,21 @@ namespace BLL.Utils
 
         private CustomLinkedList<ValueTuple<string, string>> GetExtraInfoForFileType(FileInfo file)
         {
-            string[] imgFileTypes = { ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tif", ".tiff" };
+            string[] imageFileTypes = { ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tif", ".tiff" };
 
             string ext = file.Extension;
             var res = new CustomLinkedList<ValueTuple<string, string>>();
-            if (imgFileTypes.Contains(ext))
+            if (imageFileTypes.Contains(ext))
             {
-                using (var img = Image.FromFile(file.FullName))
+                using (var image = Image.FromFile(file.FullName))
                 {
-                    res.Add(("Resolution", $"{img.Width}x{img.Height}"));
+                    res.Add(("Resolution", $"{image.Width}x{image.Height}"));
                 }
             }
 
             return res;
         }
+
         private string FormatFileSize(long len)
         {
             string[] sizes = { "B", "KB", "MB", "GB", "TB" };
