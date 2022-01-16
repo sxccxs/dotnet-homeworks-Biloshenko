@@ -18,7 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\TestLib.Abstractions\TestLib.Abstractions.csproj" />
+	  <ProjectReference Include="..\TestLib.Abstractions\TestLib.csproj" />
 	  <ProjectReference Include="..\TestLib.Core\TestLib.Core.csproj" />
 	  <ProjectReference Include="..\TestLib.Runner\TestLib.Runner.csproj" />
 	</ItemGroup>
