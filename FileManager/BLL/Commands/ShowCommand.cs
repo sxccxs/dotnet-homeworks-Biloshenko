@@ -1,49 +1,47 @@
-﻿using BLL.Utils;
-using Core.Dataclasses;
-using BLL.Abstractions.Interfaces;
+﻿using BLL.Abstractions.Interfaces;
+using BLL.Utilities;
+using Core.DataClasses;
 using Core.Enumerates;
 
 namespace BLL.Commands
 {
     internal class ShowCommand : Command
     {
-        private readonly FlagArgument<SystemEntryData[]>[] _flagArguments;
-        private readonly string[] _sortingCriterias = { "size", "type", "created", "name" };
+        private readonly FlagArgument<SystemEntryData[]>[] flagArguments;
+        private readonly string[] sortingCriteria = { "size", "type", "created", "name" };
 
         public ShowCommand()
         {
-            _flagArguments = new FlagArgument<SystemEntryData[]>[]
+            this.flagArguments = new FlagArgument<SystemEntryData[]>[]
             {
-                new FlagArgument<SystemEntryData[]>("-h", ApplyHidden),
-                new FlagArgument<SystemEntryData[]>("-f", ApplyShowFullInfo),
-                new FlagArgument<SystemEntryData[]>("-s", ApplySort, _sortingCriterias),
-
+                new FlagArgument<SystemEntryData[]>("-h", this.ApplyHidden),
+                new FlagArgument<SystemEntryData[]>("-f", this.ApplyShowFullInfo),
+                new FlagArgument<SystemEntryData[]>("-s", this.ApplySort, this.sortingCriteria),
             };
         }
 
         public override string Name => "sh";
 
-        public override OptionalResult<string> Execute(string[] args)
+        public override OptionalResult<string> Execute(string[] arguments)
         {
-            new ArgumentsValidator().ValidateParameters(args, _flagArguments, Name);
-            var sysFormater = new SystemEntriesFormater();
+            new ArgumentsValidator().ValidateParameters(arguments, this.flagArguments, this.Name);
+            var systemFormatter = new SystemEntriesFormatter();
 
+            var data = systemFormatter.GetSystemEntryDataForAllEntries();
 
-            var data = sysFormater.GetSystemEntryDataForAllEntriess();
-
-            foreach (var arg in _flagArguments)
+            foreach (var argument in this.flagArguments)
             {
-                data = arg.Apply(data);
+                data = argument.Apply(data);
             }
 
             string outputText = string.Empty;
-            var textFormater = new OutputTextFormater();
-            var dirsData = sysFormater.FilterSystemEntryDataByFlag(data, SystemEntryType.Directory);
-            var filesData = sysFormater.FilterSystemEntryDataByFlag(data, SystemEntryType.File);
+            var textFormatter = new OutputTextFormatter();
+            var directoriesData = systemFormatter.FilterSystemEntryDataByFlag(data, SystemEntryType.Directory);
+            var filesData = systemFormatter.FilterSystemEntryDataByFlag(data, SystemEntryType.File);
 
-            outputText += textFormater.FormatSystemEntriesToTree(dirsData, "Directories");
+            outputText += textFormatter.FormatSystemEntriesToTree(directoriesData, "Directories");
             outputText += "\n";
-            outputText += textFormater.FormatSystemEntriesToTree(filesData, "Files");
+            outputText += textFormatter.FormatSystemEntriesToTree(filesData, "Files");
 
             return new OptionalResult<string>(outputText);
         }
@@ -67,40 +65,39 @@ namespace BLL.Commands
 
             return data;
         }
+
         private SystemEntryData[] ApplySort(FlagArgument<SystemEntryData[]> flag, SystemEntryData[] data)
         {
             if (flag.Exists && flag.CurrentSubArgument is not null)
             {
-                data = SortDirectories(data, flag.CurrentSubArgument)
-                                       .Concat(SortFiles(data, flag.CurrentSubArgument))
-                                       .ToArray();
+                data = this.SortDirectories(data, flag.CurrentSubArgument)
+                                           .Concat(this.SortFiles(data, flag.CurrentSubArgument))
+                                           .ToArray();
             }
 
             return data;
         }
+
         private SystemEntryData[] SortFiles(SystemEntryData[] data, string key)
         {
             var files = data.Where(x => x.Type == SystemEntryType.File).ToArray();
             if (files.Where(x => x.Fields.Contains(key)).ToArray().Length != files.Length)
             {
                 return files.OrderBy(x => x.Name).ToArray();
-
             }
 
             return files.OrderBy(x => x.Fields[key]).ToArray();
-
         }
+
         private SystemEntryData[] SortDirectories(SystemEntryData[] data, string key)
         {
             var files = data.Where(x => x.Type == SystemEntryType.Directory).ToArray();
             if (files.Where(x => x.Fields.Contains(key)).ToArray().Length != files.Length)
             {
                 return files.OrderBy(x => x.Name).ToArray();
-
             }
 
             return files.OrderBy(x => x.Fields[key]).ToArray();
-
         }
     }
 }

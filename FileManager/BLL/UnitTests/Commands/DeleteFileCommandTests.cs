@@ -1,7 +1,7 @@
-﻿using Xunit;
-using FluentAssertions;
-using BLL.Commands;
+﻿using BLL.Commands;
 using Core.Exceptions;
+using FluentAssertions;
+using Xunit;
 
 namespace BLL.UnitTests.Commands
 {
@@ -15,13 +15,13 @@ namespace BLL.UnitTests.Commands
                    fileName = "DeleteFileCommandTestsFile",
                    folderPath = Path.Combine("/", folderName),
                    filePath = Path.Combine(folderPath, fileName);
-            string[] args = { filePath };
-            var cmd = new DeleteFileCommand();
+            string[] arguments = { filePath };
+            var command = new DeleteFileCommand();
             Directory.CreateDirectory(folderPath);
             File.Create(filePath).Close();
 
             // Act
-            cmd.Execute(args);
+            command.Execute(arguments);
 
             // Assert
             File.Exists(filePath).Should().BeFalse();
@@ -29,28 +29,30 @@ namespace BLL.UnitTests.Commands
             // Clean
             Directory.Delete(folderPath);
         }
+
         [Fact]
         public void Execute_NoArguments_InvalidArgumentException()
         {
             // Arrange
-            var cmd = new DeleteFileCommand();
-            string[] args = Array.Empty<string>();
+            var command = new DeleteFileCommand();
+            string[] arguments = Array.Empty<string>();
 
             // Act
-            Action act = () => cmd.Execute(args);
+            Action act = () => command.Execute(arguments);
 
             // Assert
             act.Should().Throw<InvalidArgumentException>();
         }
+
         [Fact]
         public void Execute_MoreThenOneArguments_InvalidArgumentException()
         {
             // Arrange
-            var cmd = new DeleteFileCommand();
-            string[] args = { "a", "b" };
+            var command = new DeleteFileCommand();
+            string[] arguments = { "a", "b" };
 
             // Act
-            Action act = () => cmd.Execute(args);
+            Action act = () => command.Execute(arguments);
 
             // Assert
             act.Should().Throw<InvalidArgumentException>();

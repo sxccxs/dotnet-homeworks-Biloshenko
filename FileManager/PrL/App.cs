@@ -1,35 +1,28 @@
-﻿using BLL.Abstractions.Interfaces;
-using System.Text;
+﻿using System.Text;
+using BLL.Abstractions.Interfaces;
 
 namespace PrL
 {
     public class App
-
     {
-        private readonly IParserService _parserService;
+        private readonly IParserService parserService;
+
         public App(IParserService parserService)
         {
-            _parserService = parserService;
-        }
-
-        private void Config()
-        {
-            Console.InputEncoding = Encoding.UTF8;
-            Console.OutputEncoding = Encoding.UTF8;
-            Directory.SetCurrentDirectory("/");
+            this.parserService = parserService;
         }
 
         public void RunApp()
         {
-            Config();
+            this.Configure();
 
             while (true)
             {
                 Console.Write($"{Directory.GetCurrentDirectory()}> ");
-                var inp = Console.ReadLine();
+                var input = Console.ReadLine();
                 try
                 {
-                    var res = _parserService.Parse(inp);
+                    var res = this.parserService.Parse(input);
                     if (res.HasValue)
                     {
                         Console.WriteLine();
@@ -41,6 +34,13 @@ namespace PrL
                     Console.WriteLine(ex.Message);
                 }
             }
+        }
+
+        private void Configure()
+        {
+            Console.InputEncoding = Encoding.UTF8;
+            Console.OutputEncoding = Encoding.UTF8;
+            Directory.SetCurrentDirectory("/");
         }
     }
 }

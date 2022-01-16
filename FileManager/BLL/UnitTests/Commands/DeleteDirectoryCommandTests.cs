@@ -1,7 +1,7 @@
-﻿using Xunit;
-using FluentAssertions;
-using BLL.Commands;
+﻿using BLL.Commands;
 using Core.Exceptions;
+using FluentAssertions;
+using Xunit;
 
 namespace BLL.UnitTests.Commands
 {
@@ -14,38 +14,40 @@ namespace BLL.UnitTests.Commands
             string folderName = "DeleteDirectoryCommandTests",
                    basePath = "/",
                    path = Path.Combine(basePath, folderName);
-            string[] args = { path };
+            string[] arguments = { path };
             Directory.CreateDirectory(path);
-            var cmd = new DeleteDirectoryCommand();
+            var command = new DeleteDirectoryCommand();
 
             // Act
-            cmd.Execute(args);
+            command.Execute(arguments);
 
             // Assert
             Directory.Exists(path).Should().BeFalse();
         }
+
         [Fact]
         public void Execute_NoArguments_InvalidArgumentException()
         {
             // Arrange
-            var cmd = new DeleteDirectoryCommand();
-            string[] args = Array.Empty<string>();
+            var command = new DeleteDirectoryCommand();
+            string[] arguments = Array.Empty<string>();
 
             // Act
-            Action act = () => cmd.Execute(args);
+            Action act = () => command.Execute(arguments);
 
             // Assert
             act.Should().Throw<InvalidArgumentException>();
         }
+
         [Fact]
         public void Execute_MoreThenOneArguments_InvalidArgumentException()
         {
             // Arrange
-            var cmd = new DeleteDirectoryCommand();
-            string[] args = { "a", "b" };
+            var command = new DeleteDirectoryCommand();
+            string[] arguments = { "a", "b" };
 
             // Act
-            Action act = () => cmd.Execute(args);
+            Action act = () => command.Execute(arguments);
 
             // Assert
             act.Should().Throw<InvalidArgumentException>();

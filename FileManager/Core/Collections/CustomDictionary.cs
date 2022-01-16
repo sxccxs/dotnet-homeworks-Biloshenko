@@ -1,79 +1,85 @@
-﻿using Core.Exceptions;
-using System.Collections;
+﻿using System.Collections;
+using Core.Exceptions;
 
 namespace Core.Collections
 {
-
     public class CustomDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
     {
-        private KeyValuePair<TKey, TValue>[] _values;
-
-        public int Count => _values.Length;
+        private KeyValuePair<TKey, TValue>[] values;
 
         public CustomDictionary()
         {
-            _values = Array.Empty<KeyValuePair<TKey, TValue>>();
+            this.values = Array.Empty<KeyValuePair<TKey, TValue>>();
         }
 
-
-        public void Add(TKey aKey, TValue aValue)
-        {
-            if (aKey is null) { throw new ArgumentNullException("Key can not be null"); }
-            if (Contains(aKey)) { throw new DublicateKeyException($"Key {aKey} already exists"); }
-            _values = _values.Append(new KeyValuePair<TKey, TValue>(aKey, aValue)).ToArray();
-        }
-
-        public TValue Get(TKey aKey)
-        {
-            if (!Contains(aKey))
-            {
-                throw new KeyNotFoundException($"Key {aKey} does not exist.");
-            }
-
-            return _values.Where(x => x.Key.Equals(aKey)).ToArray()[0].Value;
-
-        }
-
-        public bool Contains(TKey aKey)
-        {
-            return _values.Where(x => x.Key.Equals(aKey)).Any();
-        }
-
-        public void Remove(TKey aKey)
-        {
-            if (!Contains(aKey))
-            {
-                throw new KeyNotFoundException($"Key {aKey} does not exist");
-            }
-            _values = _values.Where(x => !x.Key.Equals(aKey)).ToArray();
-        }
+        public int Count => this.values.Length;
 
         public TValue this[TKey key]
         {
             get
             {
-                return Get(key);
+                return this.Get(key);
             }
+
             set
             {
-                Add(key, value);
+                this.Add(key, value);
             }
+        }
+
+        public void Add(TKey aKey, TValue aValue)
+        {
+            if (aKey is null)
+            {
+                throw new ArgumentNullException("Key can not be null");
+            }
+
+            if (this.Contains(aKey))
+            {
+                throw new DuplicateKeyException($"Key {aKey} already exists");
+            }
+
+            this.values = this.values.Append(new KeyValuePair<TKey, TValue>(aKey, aValue)).ToArray();
+        }
+
+        public TValue Get(TKey aKey)
+        {
+            if (!this.Contains(aKey))
+            {
+                throw new KeyNotFoundException($"Key {aKey} does not exist.");
+            }
+
+            return this.values.Where(x => x.Key.Equals(aKey)).ToArray()[0].Value;
+        }
+
+        public bool Contains(TKey aKey)
+        {
+            return this.values.Where(x => x.Key.Equals(aKey)).Any();
+        }
+
+        public void Remove(TKey aKey)
+        {
+            if (!this.Contains(aKey))
+            {
+                throw new KeyNotFoundException($"Key {aKey} does not exist");
+            }
+
+            this.values = this.values.Where(x => !x.Key.Equals(aKey)).ToArray();
         }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            return _values.AsEnumerable().GetEnumerator();
+            return this.values.AsEnumerable().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return this.GetEnumerator();
         }
 
         public override string ToString()
         {
-            return string.Join(", ", _values.Select(x => $"{x.Key}: {x.Value}"));
+            return string.Join(", ", this.values.Select(x => $"{x.Key}: {x.Value}"));
         }
-
     }
 }

@@ -1,6 +1,6 @@
 ﻿using BLL.Abstractions.Interfaces;
-using BLL.Utils;
-using Core.Dataclasses;
+using BLL.Utilities;
+using Core.DataClasses;
 
 namespace BLL.Commands
 {
@@ -8,13 +8,13 @@ namespace BLL.Commands
     {
         public override string Name => "sif";
 
-        public override OptionalResult<string> Execute(string[] args)
+        public override OptionalResult<string> Execute(string[] arguments)
         {
-            args = new ArgumentsValidator().ValidateNArguments(args, 2, Name);
-            var path = args[0];
-            var query = args[1];
+            arguments = new ArgumentsValidator().ValidateNArguments(arguments, 2, this.Name);
+            var path = arguments[0];
+            var query = arguments[1];
             var lines = File.ReadAllLines(path);
-            var outputText = FindQueryInStringArray(lines, query, path);
+            var outputText = this.FindQueryInStringArray(lines, query, path);
             if (string.IsNullOrEmpty(outputText))
             {
                 outputText = $"\"{query}\" was not found in {path}";
@@ -35,6 +35,7 @@ namespace BLL.Commands
                     outputText += $"    {line}\n";
                 }
             }
+
             return outputText;
         }
     }

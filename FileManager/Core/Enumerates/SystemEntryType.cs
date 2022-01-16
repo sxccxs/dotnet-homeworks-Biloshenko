@@ -8,7 +8,14 @@ namespace Core.Enumerates
 {
     public enum SystemEntryType
     {
+        /// <summary>
+        /// This system entry is directory.
+        /// </summary>
         Directory,
-        File
+
+        /// <summary>
+        /// This system entry is file.
+        /// </summary>
+        File,
     }
 }

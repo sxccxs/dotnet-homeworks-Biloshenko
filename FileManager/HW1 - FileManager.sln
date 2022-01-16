@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL.Abstractions", "BLL.Abstractions\BLL.Abstractions.csproj", "{7D035EC3-4978-4C1A-857E-D420FFDFA4D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "BLL\BLL.csproj", "{9EFF1ADE-2AA1-4981-9302-E0237FC8D033}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "BLL\BLL.csproj", "{9EFF1ADE-2AA1-4981-9302-E0237FC8D033}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,17 +1,16 @@
-﻿using Xunit;
+﻿using Core.Collections;
 using FluentAssertions;
-using Core.Collections;
+using Xunit;
 
 namespace Core.UnitTests.Collections
 {
     public class CustomLinkedListTests
     {
         [Fact]
-        public void Add_Int_AppenIntToList()
+        public void Add_Int_AppendIntToList()
         {
-
             // Arrange
-            CustomLinkedList<int> list = new();
+            CustomLinkedList<int> list = new ();
 
             // Act
             list.Add(1);
@@ -24,9 +23,8 @@ namespace Core.UnitTests.Collections
         public void At_ValidIndex_ValueAtGivenIndex()
         {
             // Arrange
-            CustomLinkedList<int> list = new();
+            CustomLinkedList<int> list = new ();
             list.Add(1);
-
 
             // Act
             var res = list.At(0);
@@ -39,21 +37,20 @@ namespace Core.UnitTests.Collections
         public void At_InvalidIndex_IndexOutOfRangeException()
         {
             // Arrange
-            CustomLinkedList<int> list = new();
-
+            CustomLinkedList<int> list = new ();
 
             // Act
             Action act = () => list.At(0);
 
             // Assert
             act.Should().Throw<IndexOutOfRangeException>();
-
         }
+
         [Fact]
         public void Set_ValidIndex_ValidValue_SetValueAtGivenIndexToBeEqualToGivenValue()
         {
             // Arrange
-            CustomLinkedList<int> list = new();
+            CustomLinkedList<int> list = new ();
             list.Add(1);
 
             // Act
@@ -61,13 +58,13 @@ namespace Core.UnitTests.Collections
 
             // Assert
             list[0].Should().Be(2);
-
         }
+
         [Fact]
         public void Set_InvalidIndex_ValidValue_IndexOutOfRangeException()
         {
             // Arrange
-            CustomLinkedList<int> list = new();
+            CustomLinkedList<int> list = new ();
 
             // Act
             Action act = () => list.Set(0, 2);
@@ -80,7 +77,7 @@ namespace Core.UnitTests.Collections
         public void Pop_CallFromNonEmptyList_RemoveLastElementAndReturnIt()
         {
             // Arrange
-            CustomLinkedList<int> list = new();
+            CustomLinkedList<int> list = new ();
             list.Add(1);
 
             // Act
@@ -90,11 +87,12 @@ namespace Core.UnitTests.Collections
             res.Should().Be(1);
             list.Count.Should().Be(0);
         }
+
         [Fact]
         public void Pop_CallFromEmptyList_InvalidOperationException()
         {
             // Arrange
-            CustomLinkedList<int> list = new();
+            CustomLinkedList<int> list = new ();
 
             // Act
             Action act = () => list.Pop();
@@ -102,11 +100,12 @@ namespace Core.UnitTests.Collections
             // Assert
             act.Should().Throw<InvalidOperationException>();
         }
+
         [Fact]
-        public void Remove_ExistingIndex_RemoveElementWithgivenIndexFromArray()
+        public void Remove_ExistingIndex_RemoveElementWithGivenIndexFromArray()
         {
             // Arrange
-            CustomLinkedList<int> list = new();
+            CustomLinkedList<int> list = new ();
             list.Add(1);
             list.Add(2);
             list.Add(3);
@@ -119,11 +118,12 @@ namespace Core.UnitTests.Collections
             list[1].Should().Be(3);
             list.Count.Should().Be(2);
         }
+
         [Fact]
         public void Remove_FirstExistingIndex_RemoveFirstElementFromArray()
         {
             // Arrange
-            CustomLinkedList<int> list = new();
+            CustomLinkedList<int> list = new ();
             list.Add(1);
 
             // Act
@@ -132,12 +132,12 @@ namespace Core.UnitTests.Collections
             // Assert
             list.Count.Should().Be(0);
         }
+
         [Fact]
         public void Remove_NotExistingIndex_IndexOutOfRangeException()
         {
-
             // Arrange
-            CustomLinkedList<int> list = new();
+            CustomLinkedList<int> list = new ();
 
             // Act
             Action act = () => list.Remove(1);
@@ -145,12 +145,12 @@ namespace Core.UnitTests.Collections
             // Assert
             act.Should().Throw<IndexOutOfRangeException>();
         }
+
         [Fact]
         public void Count_ListWithTwoElements_Two()
         {
-
             // Arrange
-            CustomLinkedList<int> list = new();
+            CustomLinkedList<int> list = new ();
             list.Add(1);
             list.Add(2);
 
@@ -160,7 +160,5 @@ namespace Core.UnitTests.Collections
             // Assert
             res.Should().Be(2);
         }
-
-
     }
 }

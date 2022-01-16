@@ -1,8 +1,8 @@
-﻿using Core.Dataclasses;
+﻿using Core.DataClasses;
 
-namespace BLL.Utils
+namespace BLL.Utilities
 {
-    internal class OutputTextFormater
+    internal class OutputTextFormatter
     {
         public string FormatSystemEntriesToTree(SystemEntryData[] data, string message)
         {
@@ -12,7 +12,10 @@ namespace BLL.Utils
                 var prefix = "    -";
                 outputText += $"-{d.Name}{(d.ShowFullInfo ? ":" : string.Empty)}\n";
 
-                if (!d.ShowFullInfo) continue;
+                if (!d.ShowFullInfo)
+                {
+                    continue;
+                }
 
                 foreach (var (k, v) in d.Fields)
                 {
@@ -23,5 +26,4 @@ namespace BLL.Utils
             return outputText;
         }
     }
-
 }
